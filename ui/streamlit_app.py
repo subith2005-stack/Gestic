@@ -1,4 +1,4 @@
-import streamlit as st  # type: ignore
+import streamlit as st # type: ignore
 import cv2 # type: ignore
 import mediapipe as mp # type: ignore
 import numpy as np # type: ignore
@@ -16,7 +16,7 @@ with open(MODEL_PATH, "rb") as f:
     model = pickle.load(f)
 
 # ------------------------------
-# Text-to-speech function
+# Speech function
 # ------------------------------
 def speak_async(text):
 
@@ -53,6 +53,33 @@ run = st.checkbox("Start Camera")
 
 FRAME_WINDOW = st.image([])
 
+gesture_display = st.empty()
+confidence_display = st.empty()
+
+st.subheader("Sentence Builder")
+sentence_box = st.empty()
+
+clear_button = st.button("Clear Sentence")
+
+st.subheader("Gesture History")
+history_box = st.empty()
+
+# ------------------------------
+# Session State Storage
+# ------------------------------
+if "sentence" not in st.session_state:
+    st.session_state.sentence = []
+
+if "history" not in st.session_state:
+    st.session_state.history = []
+
+if "last_added_gesture" not in st.session_state:
+    st.session_state.last_added_gesture = None
+
+# Clear sentence button
+if clear_button:
+    st.session_state.sentence = []
+
 # ------------------------------
 # Camera setup
 # ------------------------------
@@ -82,6 +109,7 @@ while run:
     results = hands.process(rgb)
 
     predicted_gesture = "None"
+    confidence = 0
 
     if results.multi_hand_landmarks:
 
@@ -100,7 +128,12 @@ while run:
 
             features = np.array(features).reshape(1, -1)
 
-            predicted_gesture = model.predict(features)[0]
+            prediction = model.predict(features)[0]
+            probabilities = model.predict_proba(features)[0]
+
+            predicted_gesture = prediction
+            confidence = np.max(probabilities) * 100
+            CONFIDENCE_THRESHOLD = 70
 
             # Smooth predictions
             gesture_buffer.append(predicted_gesture)
@@ -108,14 +141,37 @@ while run:
             if len(gesture_buffer) > 5:
                 gesture_buffer.pop(0)
 
-            # Check stable prediction
-            if gesture_buffer.count(predicted_gesture) >= 4:
+            if gesture_buffer.count(predicted_gesture) >= 4 and confidence > CONFIDENCE_THRESHOLD:
 
                 if time.time() - last_spoken_time > speak_delay:
+
                     speak_async(predicted_gesture)
                     last_spoken_time = time.time()
 
-    # Display gesture
+                    # Add to history
+                    st.session_state.history.append(predicted_gesture)
+
+                    if len(st.session_state.history) > 10:
+                        st.session_state.history.pop(0)
+
+                    # Add to sentence only if new gesture
+                    if predicted_gesture != st.session_state.last_added_gesture:
+                        st.session_state.sentence.append(predicted_gesture)
+                        st.session_state.last_added_gesture = predicted_gesture
+
+    # ------------------------------
+    # Update UI
+    # ------------------------------
+    gesture_display.markdown(f"### Gesture: **{predicted_gesture}**")
+    confidence_display.markdown(f"Confidence: **{confidence:.2f}%**")
+
+    sentence_box.markdown(" ".join(st.session_state.sentence))
+
+    history_box.markdown("\n".join(st.session_state.history))
+
+    # ------------------------------
+    # Camera overlay
+    # ------------------------------
     cv2.putText(
         frame,
         f"Gesture: {predicted_gesture}",
@@ -126,7 +182,6 @@ while run:
         2
     )
 
-    # FPS counter
     fps = 1 / (time.time() - start_time)
 
     cv2.putText(

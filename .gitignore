@@ -1,6 +1,19 @@
+# Virtual environments
 venv/
+venv_v1/
+venv_v2/
+
+# Python cache
 __pycache__/
 *.pyc
-*.pkl
+
+# Dataset
+v2/dataset/
+
+# Model files (optional)
 *.h5
-data/raw/*
+*.keras
+
+# OS files
+.DS_Store
+Thumbs.db

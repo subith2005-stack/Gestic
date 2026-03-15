@@ -1,5 +1,5 @@
-import tensorflow as tf
-from tensorflow.keras import layers, models
+import tensorflow as tf # type: ignore
+from tensorflow.keras import layers, models # type: ignore
 import os
 
 DATASET_PATH = "v2/dataset"

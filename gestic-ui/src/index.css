@@ -1,0 +1,161 @@
+/* ===== GLOBAL STYLES ===== */
+
+body {
+margin: 0;
+font-family: Arial, Helvetica, sans-serif;
+background: #020617;
+color: white;
+overflow: hidden;
+}
+
+/* ===== MAIN APP CONTAINER ===== */
+
+.app {
+height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+position: relative;
+}
+
+/* ===== MAIN LAYOUT (AI DASHBOARD STYLE) ===== */
+
+.layout {
+display: flex;
+gap: 40px;
+backdrop-filter: blur(20px);
+background: rgba(255, 255, 255, 0.05);
+border-radius: 20px;
+padding: 40px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* ===== CAMERA PANEL ===== */
+
+.cameraPanel {
+text-align: center;
+}
+
+.cameraPanel h1 {
+margin-bottom: 10px;
+}
+
+.camera {
+width: 420px;
+border-radius: 12px;
+margin-top: 15px;
+border: 2px solid rgba(255,255,255,0.1);
+}
+
+/* ===== INFO PANEL ===== */
+
+.infoPanel {
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+width: 250px;
+}
+
+/* ===== GESTURE CARD ===== */
+
+.gestureCard {
+background: rgba(255,255,255,0.05);
+padding: 20px;
+border-radius: 12px;
+text-align: center;
+margin-bottom: 20px;
+width: 100%;
+box-shadow: 0 0 20px rgba(99,102,241,0.6);
+}
+
+.gestureCard h2 {
+margin: 0;
+font-size: 28px;
+}
+
+.gestureCard p {
+margin-top: 6px;
+font-size: 14px;
+color: #94a3b8;
+}
+
+/* ===== BUTTON ===== */
+
+button {
+padding: 10px 20px;
+border: none;
+border-radius: 8px;
+background: #6366f1;
+color: white;
+cursor: pointer;
+font-size: 16px;
+margin-bottom: 20px;
+transition: transform 0.2s ease;
+}
+
+button:hover {
+transform: scale(1.05);
+}
+
+/* ===== AUDIO WAVE ===== */
+
+.wave {
+display: flex;
+gap: 4px;
+}
+
+.wave span {
+width: 4px;
+height: 20px;
+background: #6366f1;
+animation: wave 1s infinite ease-in-out;
+}
+
+.wave span:nth-child(2){animation-delay:0.1s}
+.wave span:nth-child(3){animation-delay:0.2s}
+.wave span:nth-child(4){animation-delay:0.3s}
+.wave span:nth-child(5){animation-delay:0.4s}
+
+/* Wave animation */
+
+@keyframes wave {
+
+0%,100% {
+height: 10px;
+}
+
+50% {
+height: 30px;
+}
+
+}
+
+/* ===== BACKGROUND BLOBS ===== */
+
+.blob {
+position: absolute;
+width: 450px;
+height: 450px;
+border-radius: 50%;
+filter: blur(120px);
+opacity: 0.6;
+}
+
+.blob1 {
+background: #6366f1;
+top: -100px;
+left: -100px;
+}
+
+.blob2 {
+background: #22c55e;
+bottom: -120px;
+right: -120px;
+}
+
+.blob3 {
+background: #ec4899;
+top: 30%;
+left: 60%;
+}

@@ -17,3 +17,5 @@ v2/dataset/
 # OS files
 .DS_Store
 Thumbs.db
+
+gestic-ui/node_modules/

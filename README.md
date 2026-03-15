@@ -229,7 +229,7 @@ git clone <repo-url>
 cd gestic
 ```
 
-Create a virtual environment:
+Create a Python virtual environment:
 
 ```
 python -m venv venv
@@ -241,29 +241,123 @@ Activate environment:
 venv\Scripts\activate
 ```
 
-Install dependencies:
+Install Python dependencies:
 
 ```
 pip install -r requirements.txt
 ```
 
+Install frontend dependencies for Version 2 UI:
+
+```
+cd gestic-ui
+npm install
+cd ..
+```
+
 ---
 
-# Running the Project
+# Running the Project (Both Versions)
 
-Start the Streamlit interface:
+The project has two runnable versions.
+
+## Version 1 (Landmark + RandomForest + Streamlit)
+
+### 1) Collect landmark data (optional if dataset already exists)
+
+```
+python src/capture/collect_data.py
+```
+
+### 2) Train model (optional if model already exists)
+
+```
+python src/training/train_model.py
+```
+
+### 3) Run Streamlit app
 
 ```
 streamlit run ui/streamlit_app.py
 ```
 
-The application will open in your browser.
+### 4) Alternative webcam inference (without Streamlit)
+
+```
+python src/inference/predict_gesture.py
+```
 
 ---
 
-# Future Improvements (V2)
+## Version 2 (CNN + FastAPI + React)
 
-Planned enhancements for the next version include:
+### 1) Collect image dataset (optional if dataset already exists)
+
+```
+python v2/capture/collect_images.py
+```
+
+### 2) Train CNN model (optional if model already exists)
+
+```
+python v2/cnn_model/train_cnn.py
+```
+
+### 3) Start FastAPI backend
+
+```
+uvicorn v2.cnn_model.api:app --reload
+```
+
+Backend runs at:
+
+```
+http://127.0.0.1:8000
+```
+
+### 4) Start React frontend
+
+Open a new terminal:
+
+```
+cd gestic-ui
+npm run dev
+```
+
+Frontend runs at:
+
+```
+http://127.0.0.1:5173
+```
+
+### 5) Optional standalone CNN webcam inference
+
+```
+python v2/cnn_model/predict_cnn.py
+```
+
+---
+
+# Version Summary
+
+## Version 1
+
+* Hand landmark based recognition pipeline
+* RandomForest classifier
+* Streamlit interface + speech support
+
+## Version 2
+
+* Image-based CNN classification
+* FastAPI backend for prediction API
+* React + Vite + Framer Motion modern UI
+* Browser speech output support
+
+---
+
+# Future Improvements
+
+Planned enhancements for upcoming versions include:
 
 * Dynamic gesture recognition
 * Sentence prediction and grammar correction
@@ -277,10 +371,10 @@ Planned enhancements for the next version include:
 
 # Limitations
 
-* Limited gesture vocabulary
-* Requires consistent hand positioning
-* Lighting conditions may affect detection
-* Static gestures only (V1)
+* Limited gesture vocabulary in current dataset
+* Lighting and camera quality can affect predictions
+* Static gesture focus (no full temporal sentence model yet)
+* API and UI currently tuned for local development setup
 
 ---
 
